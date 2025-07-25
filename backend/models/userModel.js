@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
     },
     college: {
       type: String,
-      required: true,
+      default: 'BIT Mesra'
     },
     graduationYear: {
       type: Number,
@@ -54,7 +54,7 @@ const userSchema = new mongoose.Schema({
   }
 )
 
-const userModel = mongoose.model.user || mongoose.model('user', userSchema);
+const userModel = mongoose.models.user || mongoose.model('user', userSchema);
 
 export default userModel;
 
