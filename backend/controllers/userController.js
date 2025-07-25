@@ -2,6 +2,9 @@ import userModel from "../models/userModel.js";
 import validator from "validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { v2 as cloudinary } from "cloudinary";
+
+
 
 //API to register user
 const registerUser = async (req, res) => {
@@ -95,18 +98,57 @@ const loginUser = async (req, res) => {
         .status(401)
         .json({ success: false, message: "Invalid email or password." });
     }
-    
+
     //Generate token
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-    expiresIn: "7d",
+      expiresIn: "7d",
     });
-    
-    return res.json({success:true, token});
-    
+
+    return res.json({ success: true, token });
   } catch (error) {
     console.error("Error in loginUser:", error);
     res.json({ success: false, message: error.message });
   }
 };
 
-export { registerUser, loginUser };
+//API to get user profile data
+const getProfile = async (req, res) => {
+  try {
+    const userId  = req.user.id;   //This id comes from the middleware
+    const userData = await userModel.findById(userId).select("-password");
+    res.json({ success: true, userData });
+  } catch (error) {
+    console.log("Get Profile error", error)
+    res.json({ success: false, message: error.message })
+  }
+};
+
+// API to update user profile
+const updateProfile = async(req, res) => {
+  try {
+    const userId = req.user.id;   //Id should come from middleware
+    const {name, gender, branch, phone} = req.body;
+    const imageFile = req.file;
+
+    if (!name || !phone || !branch || !gender) {
+      return res.json({ success: false, message: "Data Missing" });
+    }
+
+    const updateData = { name, gender, branch, phone };
+    
+     if (imageFile) {
+      const imageUpload = await cloudinary.uploader.upload(imageFile.path, { resource_type: 'image' });
+      updateData.image = imageUpload.secure_url;
+    }
+
+    await userModel.findByIdAndUpdate(userId, updateData);
+
+    res.json({ success: true, message: 'Profile Updated' })
+  } catch (error) {
+    console.log("Update Profile error", error);
+    res.json({ success: false, message: error.message });
+  }
+}
+
+
+export { registerUser, loginUser, getProfile, updateProfile };

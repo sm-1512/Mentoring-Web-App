@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
       default: 'BIT Mesra'
     },
     graduationYear: {
-      type: Number,
+      type: String,
       required: true,
     },
     currentYear: {
