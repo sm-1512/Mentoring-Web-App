@@ -3,6 +3,9 @@ import bcrypt from "bcrypt";
 import { v2 as cloudinary } from "cloudinary";
 import mentorModel from "../models/mentorModel.js";
 import jwt from "jsonwebtoken";
+import sessionModel from "../models/sessionModel.js";
+import userModel from "../models/userModel.js";
+
 
 //API for adding doctor
 const addMentor = async (req, res) => {
@@ -123,6 +126,63 @@ const allMentors = async(req, res) => {
 
 }
 
+//API to get list of all sessions
+const sessionsAdmin = async(req, res) => {
+  try {
+    const sessions = await sessionModel.find({});
+    res.json({success:true, sessions});
+  } catch (error) {
+    console.log(error)
+    res.json({ success: false, message: error.message })
+  }
+}
+
+//API to cancel session from admin dashboard
+const sessionCancel = async (req, res) => {
+  try {
+    const { sessionId } = req.body;
+    const sessionData = await sessionModel.findById(sessionId);
+
+    await sessionModel.findByIdAndUpdate(sessionId, { cancelled: true });
+
+    //Once cancelled we need to mentor slot
+    const { mentorId, slotDate, slotTime } = sessionData;
+
+    const mentorData = await mentorModel.findById(mentorId);
+    let slots_booked = mentorData.slots_booked; //Accessing the array of booked slots for that date.
+    slots_booked[slotDate] = slots_booked[slotDate].filter(
+      (e) => e !== slotTime
+    ); //Looping over each e and keeping only those that are not equal to the cancelled time.
+    await mentorModel.findByIdAndUpdate(mentorId, { slots_booked });
+    res.json({ success: true, message: "Session Cancelled" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// API to get dashboard data for admin panel
+const adminDashboard = async (req, res) => {
+    try {
+
+        const mentors = await mentorModel.find({})
+        const users = await userModel.find({})
+        const sessions = await sessionModel.find({})
+
+        const dashData = {
+            mentors: mentors.length,
+            sessions: sessions.length,
+            students: users.length,
+            latestSessions: sessions.reverse().slice(0,5),
+        }
+
+        res.json({ success: true, dashData })
+
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
 
 
-export { addMentor, loginAdmin, allMentors }; 
+export { addMentor, loginAdmin, allMentors, sessionsAdmin, sessionCancel, adminDashboard }; 
