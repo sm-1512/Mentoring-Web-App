@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { v2 as cloudinary } from "cloudinary";
 import mentorModel from "../models/mentorModel.js";
 import sessionModel from "../models/sessionModel.js";
+import razorpay from "razorpay";
 
 //API to register user
 const registerUser = async (req, res) => {
@@ -164,7 +165,7 @@ const bookSession = async (req, res) => {
       return res.json({ success: false, message: "Mentor Not Available" });
     }
 
-    let slots_booked = mentorData.slots_booked
+    let slots_booked = mentorData.slots_booked;
     //Checking for slot availability
     if (slots_booked[slotDate]) {
       if (slots_booked[slotDate].includes(slotTime)) {
@@ -178,8 +179,6 @@ const bookSession = async (req, res) => {
     }
 
     const userData = await userModel.findById(userId).select("-password");
-
-    
 
     const sessionData = {
       userId,
@@ -233,17 +232,74 @@ const cancelSession = async (req, res) => {
     const { mentorId, slotDate, slotTime } = sessionData;
 
     const mentorData = await mentorModel.findById(mentorId);
-    let slots_booked = mentorData.slots_booked;  //Accessing the array of booked slots for that date.
+    let slots_booked = mentorData.slots_booked; //Accessing the array of booked slots for that date.
     slots_booked[slotDate] = slots_booked[slotDate].filter(
       (e) => e !== slotTime
     ); //Looping over each e and keeping only those that are not equal to the cancelled time.
     await mentorModel.findByIdAndUpdate(mentorId, { slots_booked });
     res.json({ success: true, message: "Session Cancelled" });
   } catch (error) {
-    console.log(error)
-    res.json({ success: false, message: error.message })
+    console.log(error);
+    res.json({ success: false, message: error.message });
   }
 };
+
+const razorpayInstance = new razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
+
+//API to make payment of session using razorpay
+const paymentRazorpay = async (req, res) => {
+  try {
+    const { sessionId } = req.body;
+    const sessionData = await sessionModel.findById(sessionId);
+    if (!sessionData || sessionData.cancelled) {
+      return res.json({
+        success: false,
+        message: "Session cancelled or not found",
+      });
+    }
+
+    //Creating options for razorpay payements
+    const options = {
+      amount: sessionData.amount * 100,
+      currency: process.env.CURRENCY,
+      receipt: sessionId,
+    };
+
+    // Creating an order using razorpay
+    const order = await razorpayInstance.orders.create(options);
+    res.json({ success: true, order });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+// API to verify payment of razorpay
+const verifyRazorpay = async (req, res) => {
+  try {
+    const { razorpay_order_id } = req.body;
+    const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
+    //console.log(orderInfo);
+    
+    //This status is coming from RazorPay's API response when we fetch an order.
+    //In receipt we had passed the order id and so we are using that to mark payment status true
+    if (orderInfo.status === "paid") {
+      await sessionModel.findByIdAndUpdate(orderInfo.receipt, {
+        payment: true,
+      });
+      res.json({ success: true, message: "Payment Successful" });
+    } else {
+      res.json({ success: false, message: "Payment Failed" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -252,4 +308,6 @@ export {
   bookSession,
   listSession,
   cancelSession,
+  paymentRazorpay,
+  verifyRazorpay,
 };
