@@ -155,8 +155,8 @@ const updateProfile = async (req, res) => {
 // API to book Session
 const bookSession = async (req, res) => {
   try {
-     const userId = req.user.id; //Id should come from authUser middleware 
-    
+    const userId = req.user.id; //Id should come from authUser middleware
+
     const { slotDate, slotTime, mentorId } = req.body;
     const mentorData = await mentorModel.findById(mentorId).select("-password");
 
@@ -164,8 +164,7 @@ const bookSession = async (req, res) => {
       return res.json({ success: false, message: "Mentor Not Available" });
     }
 
-    let slots_booked = mentorData.slots_booked;
-
+    let slots_booked = mentorData.slots_booked
     //Checking for slot availability
     if (slots_booked[slotDate]) {
       if (slots_booked[slotDate].includes(slotTime)) {
@@ -180,6 +179,8 @@ const bookSession = async (req, res) => {
 
     const userData = await userModel.findById(userId).select("-password");
 
+    
+
     const sessionData = {
       userId,
       mentorId,
@@ -192,16 +193,63 @@ const bookSession = async (req, res) => {
     };
 
     const newSession = new sessionModel(sessionData);
-    await newSession.save(); 
+    await newSession.save();
 
     // save new slots data in docData
-    await mentorModel.findByIdAndUpdate(mentorId, {slots_booked});
-    res.json({ success: true, message: 'Session Booked' })
-
-
+    await mentorModel.findByIdAndUpdate(mentorId, { slots_booked });
+    res.json({ success: true, message: "Session Booked" });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
   }
 };
-export { registerUser, loginUser, getProfile, updateProfile, bookSession };
+
+//API to get all session to show on the frontend page
+const listSession = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const sessions = await sessionModel.find({ userId });
+    res.json({ success: true, sessions });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+const cancelSession = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { sessionId } = req.body;
+    const sessionData = await sessionModel.findById(sessionId);
+
+    //Verify session user
+    if (sessionData.userId !== userId) {
+      return res.json({ success: false, message: "Unauthorized action" });
+    }
+
+    await sessionModel.findByIdAndUpdate(sessionId, { cancelled: true });
+
+    //Once cancelled we need to mentor slot
+    const { mentorId, slotDate, slotTime } = sessionData;
+
+    const mentorData = await mentorModel.findById(mentorId);
+    let slots_booked = mentorData.slots_booked;  //Accessing the array of booked slots for that date.
+    slots_booked[slotDate] = slots_booked[slotDate].filter(
+      (e) => e !== slotTime
+    ); //Looping over each e and keeping only those that are not equal to the cancelled time.
+    await mentorModel.findByIdAndUpdate(mentorId, { slots_booked });
+    res.json({ success: true, message: "Session Cancelled" });
+  } catch (error) {
+    console.log(error)
+    res.json({ success: false, message: error.message })
+  }
+};
+export {
+  registerUser,
+  loginUser,
+  getProfile,
+  updateProfile,
+  bookSession,
+  listSession,
+  cancelSession,
+};
