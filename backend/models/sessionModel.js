@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 
-const appointmentSchema = new mongoose.Schema({
+const sessionSchema = new mongoose.Schema({
     userId: { type: String, required: true },
     mentorId: { type: String, required: true },
     slotDate: { type: String, required: true },
@@ -14,5 +14,5 @@ const appointmentSchema = new mongoose.Schema({
     isCompleted: { type: Boolean, default: false }
 })
 
-const appointmentModel = mongoose.models.appointment || mongoose.model("appointment", appointmentSchema);
-export default appointmentModel;
+const sessionModel = mongoose.models.appointment || mongoose.model("session", sessionSchema);
+export default sessionModel;

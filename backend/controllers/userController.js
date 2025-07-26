@@ -3,8 +3,8 @@ import validator from "validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { v2 as cloudinary } from "cloudinary";
-
-
+import mentorModel from "../models/mentorModel.js";
+import sessionModel from "../models/sessionModel.js";
 
 //API to register user
 const registerUser = async (req, res) => {
@@ -114,20 +114,20 @@ const loginUser = async (req, res) => {
 //API to get user profile data
 const getProfile = async (req, res) => {
   try {
-    const userId  = req.user.id;   //This id comes from the middleware
+    const userId = req.user.id; //This id comes from the middleware
     const userData = await userModel.findById(userId).select("-password");
     res.json({ success: true, userData });
   } catch (error) {
-    console.log("Get Profile error", error)
-    res.json({ success: false, message: error.message })
+    console.log("Get Profile error", error);
+    res.json({ success: false, message: error.message });
   }
 };
 
 // API to update user profile
-const updateProfile = async(req, res) => {
+const updateProfile = async (req, res) => {
   try {
-    const userId = req.user.id;   //Id should come from middleware
-    const {name, gender, branch, phone} = req.body;
+    const userId = req.user.id; //Id should come from middleware
+    const { name, gender, branch, phone } = req.body;
     const imageFile = req.file;
 
     if (!name || !phone || !branch || !gender) {
@@ -135,20 +135,73 @@ const updateProfile = async(req, res) => {
     }
 
     const updateData = { name, gender, branch, phone };
-    
-     if (imageFile) {
-      const imageUpload = await cloudinary.uploader.upload(imageFile.path, { resource_type: 'image' });
+
+    if (imageFile) {
+      const imageUpload = await cloudinary.uploader.upload(imageFile.path, {
+        resource_type: "image",
+      });
       updateData.image = imageUpload.secure_url;
     }
 
     await userModel.findByIdAndUpdate(userId, updateData);
 
-    res.json({ success: true, message: 'Profile Updated' })
+    res.json({ success: true, message: "Profile Updated" });
   } catch (error) {
     console.log("Update Profile error", error);
     res.json({ success: false, message: error.message });
   }
-}
+};
+
+// API to book Session
+const bookSession = async (req, res) => {
+  try {
+     const userId = req.user.id; //Id should come from authUser middleware 
+    
+    const { slotDate, slotTime, mentorId } = req.body;
+    const mentorData = await mentorModel.findById(mentorId).select("-password");
+
+    if (!mentorData.available) {
+      return res.json({ success: false, message: "Mentor Not Available" });
+    }
+
+    let slots_booked = mentorData.slots_booked;
+
+    //Checking for slot availability
+    if (slots_booked[slotDate]) {
+      if (slots_booked[slotDate].includes(slotTime)) {
+        return res.json({ success: false, message: "Slot Not Available" });
+      } else {
+        slots_booked[slotDate].push(slotTime);
+      }
+    } else {
+      slots_booked[slotDate] = [];
+      slots_booked[slotDate].push(slotTime);
+    }
+
+    const userData = await userModel.findById(userId).select("-password");
+
+    const sessionData = {
+      userId,
+      mentorId,
+      userData,
+      mentorData,
+      amount: mentorData.fees,
+      slotTime,
+      slotDate,
+      date: Date.now(),
+    };
+
+    const newSession = new sessionModel(sessionData);
+    await newSession.save(); 
+
+    // save new slots data in docData
+    await mentorModel.findByIdAndUpdate(mentorId, {slots_booked});
+    res.json({ success: true, message: 'Session Booked' })
 
 
-export { registerUser, loginUser, getProfile, updateProfile };
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+export { registerUser, loginUser, getProfile, updateProfile, bookSession };

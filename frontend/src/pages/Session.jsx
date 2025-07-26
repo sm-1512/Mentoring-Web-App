@@ -1,15 +1,19 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const Session = () => {
   const { mentorId } = useParams(); // Used to access the mentor ID from the URL. UseParams is used to extract dynamic parameters from the URL. Provided by react-router-dom.
   // We can use this ID to fetch session details or mentor information as needed.
   //The mentor id variable we are using here is the same as the one we are using in the App.jsx file in the route path "/session/:mentorId" element={<Session />}.
-  const { mentors, currencySymbol } = useContext(AppContext);
+  const { mentors, currencySymbol, backendUrl, token, getMentorsData } = useContext(AppContext);
 
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+
+  const navigate = useNavigate();
 
   const [mentorInfo, setMentorInfo] = useState(null);
   const [mentorSlot, setMentorSlot] = useState([]); // This state is used to store the mentor slot information, which can be used to display available slots for the mentor's session.
@@ -39,43 +43,89 @@ const Session = () => {
       if (![5, 6, 0].includes(dayOfWeek)) continue; // Only FRI (5), SAT (6), SUN (0)
 
       let endTime = new Date(currentDate);
-      endTime.setHours(21, 0, 0, 0); // 9 PM
+      endTime.setHours(22, 0, 0, 0); // 10 PM : Modify if you want session from 7 -> 9. Make it to 21, then slots can only be booked till 8PM
 
       let timeSlots = [];
-      while (currentDate <= endTime) {
-        timeSlots.push({
-          time: currentDate.toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          }),
-          date: currentDate.toISOString(),
+      while (currentDate < endTime) {
+        let formattedTime = currentDate.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
         });
-        currentDate.setMinutes(currentDate.getMinutes() + 60); // +1 hour
+
+        let day = currentDate.getDate();
+        let month = currentDate.getMonth() + 1;
+        let year = currentDate.getFullYear();
+
+        const slotDate = day + "_" + month + "_" + year;
+        const slotTime = formattedTime;
+
+        const isSlotAvailable =
+          mentorInfo.slots_booked[slotDate] &&
+          mentorInfo.slots_booked[slotDate].includes(slotTime)
+            ? false
+            : true;
+
+        if (isSlotAvailable) {
+          // Add slot to array
+          timeSlots.push({
+            datetime: new Date(currentDate),
+            time: formattedTime,
+          });
+        }
+
+        // Increment current time by 60 minutes
+        currentDate.setMinutes(currentDate.getMinutes() + 60);
       }
 
       setMentorSlot((prev) => [...prev, timeSlots]);
     }
   };
 
-  const bookAppointment = async () => {
-    const date = new Date(mentorSlot[slotIndex][0].date);
-    // Extracting the date and time from the selected slot
+  const bookSession = async () => {
+    try {
+      if (!token) {
+        toast.warning("Login to book session");
+        return navigate("/login");
+      }
+      //const date = new Date(mentorSlot[slotIndex][0].date);
+      // Extracting the date and time from the selected slot
 
-    let day = date.getDate();
-    let month = date.getMonth() + 1;
-    let year = date.getFullYear();
+      const date = mentorSlot[slotIndex][0].datetime;
 
-    const slotDate = `${day}_${month}_${year}`;
-    console.log(slotDate, slotTime);
+      let day = date.getDate();
+      let month = date.getMonth() + 1;
+      let year = date.getFullYear();
+
+      const slotDate = `${day}_${month}_${year}`;
+
+      const { data } = await axios.post(backendUrl + "/api/user/book-session",{ mentorId, slotDate, slotTime },{ headers: { token }});
+      if (data.success) {
+        toast.success(data.message);
+        getMentorsData();
+        navigate("/my-sessions");
+      } else {
+        toast.error(data.message);
+      }
+
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+    
+
   };
 
   useEffect(() => {
-    fetchMentorInfo();
+    if(mentors.length>0){
+      fetchMentorInfo();
+    }
   }, [mentors, mentorId]); // This effect runs when the mentors array or mentorId changes. It calls fetchMentor to update the mentorInfo state with the correct mentor's information.
 
-  useEffect(() => {
+useEffect(() => {
+  if (mentorInfo) {
     getAvailableSlots();
-  }, [mentorInfo]); // This effect runs when the mentorInfo state changes. It calls getAvailable
+  }
+}, [mentorInfo]); // This effect runs when the mentorInfo state changes. It calls getAvailable
   // slots to update the docSlot state with available slots for the selected mentor.
 
   useEffect(() => {
@@ -156,10 +206,10 @@ const Session = () => {
                 }`}
               >
                 <p className="text-sm font-semibold">
-                  {item[0] && daysOfWeek[new Date(item[0].date).getDay()]}
+                  {item[0] && daysOfWeek[item[0].datetime.getDay()]}
                 </p>
                 <p className="text-base">
-                  {item[0] && new Date(item[0].date).getDate()}
+                  {item[0] && item[0].datetime.getDate()}
                 </p>
               </div>
             ))}
@@ -182,7 +232,7 @@ const Session = () => {
           </div>
 
           <button
-            onClick={bookAppointment}
+            onClick={bookSession}
             className="mt-8 bg-blue-600 hover:bg-blue-700 transition text-white px-10 py-3 rounded-full text-sm font-medium shadow-md"
           >
             Book Appointment
