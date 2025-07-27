@@ -37,7 +37,7 @@ const Navbar = () => {
       {/* Profile/Logout Section */}
       <div className="flex items-center gap-4">
         <div className="text-right">
-          <p className="font-semibold text-gray-800">Admin User</p>
+          <p className="font-semibold text-gray-800">Dashboard User</p>
           <p className="text-xs text-gray-500">
             {aToken ? "Administrator" : "Doctor"}
           </p>

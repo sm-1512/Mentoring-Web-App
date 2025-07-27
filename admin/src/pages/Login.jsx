@@ -3,10 +3,11 @@ import React, { useContext, useState } from "react";
 import { AdminContext } from "../context/AdminContext";
 import { toast } from "react-toastify";
 import { HiOutlineMail, HiOutlineLockClosed } from "react-icons/hi";
+import { MentorContext } from "../context/MentorContext";
 
 const Login = () => {
   const { setAToken, backendUrl } = useContext(AdminContext);
-
+  const {setMToken} = useContext(MentorContext);
   const [state, setState] = useState("Admin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,13 +28,16 @@ const Login = () => {
           toast.error(data.message || "Login failed");
         }
       } else {
-        const { data } = await axios.post(backendUrl + "/api/mentor/login", {
+          const { data } = await axios.post(backendUrl + "/api/mentor/login", {
           email,
           password,
         });
 
         if (data.success) {
           localStorage.setItem("mToken", data.token);
+          setMToken(data.token);
+          console.log(data.token);
+          
           toast.success("Mentor logged in successfully!");
         } else {
           toast.error(data.message || "Login failed");
