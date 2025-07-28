@@ -12,8 +12,8 @@ import MentorsList from "./pages/Admin/MentorsList";
 import Login from "./pages/Login";
 import { MentorContext } from './context/MentorContext';
 import MentorAppointments from "./pages/Mentor/MentorAppointments";
-import MentorDashboard from "./pages/Mentor/MentorDashboard";
-import MentorProfile from "./pages/Mentor/MentorProfile"; 
+/* import MentorDashboard from "./pages/Mentor/MentorDashboard";
+import MentorProfile from "./pages/Mentor/MentorProfile";  */
 
 
 
@@ -37,9 +37,9 @@ const App = () => {
           <Route path="/mentor-list" element={<MentorsList />} />
 
           {/*Mentor Routes */}
-          <Route path="/mentor-dashboard" element={<MentorDashboard />} />
+          {/* <Route path="/mentor-dashboard" element={<MentorDashboard />} /> */}
           <Route path="/mentor-appointments" element={<MentorAppointments />} />
-          <Route path="/mentor-profile" element={<MentorProfile />} /> 
+          {/* <Route path="/mentor-profile" element={<MentorProfile />} />  */}
         </Routes>
       </div>
     </div>

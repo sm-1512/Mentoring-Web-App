@@ -57,7 +57,58 @@ const loginMentor = async (req, res) => {
     }
 };
 
+// API to get doctor sessiosn for mentor panel
+const sessionsMentor = async(req, res) => {
+    try {
+        const mentorId = req.mentor.id;
+        const sessions = await sessionModel.find({mentorId});
+        res.json({success:true, sessions});
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+
+//API to enable mentor to cancel sessions
+const sessionCancel = async (req, res) => {
+    try {
+        const mentorId = req.mentor.id; //Coming from middleware
+        const {sessionId} = req.body; //Coming from frontend
+        const sessionData = await sessionModel.findById(sessionId);
+        if(sessionData && sessionData.mentorId === mentorId){
+            await sessionModel.findByIdAndUpdate(sessionId, {cancelled: true});
+            return res.json({success:true, message:"Session Cancelled"});
+        }
+        res.json({success: false, message:"Cancellation Failed"});
+
+
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }  
+}
+
+
+//API for mentor to mark the session completed
+const sessionComplete = async(req, res) => {
+    try {
+        const mentorId = req.mentor.id; //This is coming from middleware 
+        const {sessionId} = req.body;  //This is coming from frontend
+        const sessionData = await sessionModel.findById(sessionId);
+        if(sessionData && sessionData.mentorId === mentorId){
+            await sessionModel.findByIdAndUpdate(sessionId, {isCompleted: true});
+            return res.json({success:true, message:"Session Completed"});
+        } else {
+            return res.json({success:false, message:"Mark Failed"});
+        }
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+    
+}
 
 
 
-export {changeAvailablity, mentorList, loginMentor}
+
+export {changeAvailablity, mentorList, loginMentor, sessionsMentor, sessionCancel, sessionComplete}
