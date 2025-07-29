@@ -108,7 +108,40 @@ const sessionComplete = async(req, res) => {
     
 }
 
+//API to get dashboard data for mentor
+const mentorDashboard = async (req, res) => {
+    try {
+        const mentorId = req.mentor.id;
+        const sessions = await sessionModel.find({mentorId});
+        let earnings = 0;
+        sessions.map((item) => {
+            if(item.isCompleted || item.payment){
+                earnings += item.amount;
+            }
+        })
+
+        let students = [];
+
+        sessions.map((item) => {
+            if(!students.includes(item.userId)){
+                students.push(item.userId);
+            }
+        })
+
+        const dashData = {
+            earnings,
+            sessions : sessions.length,
+            students : students.length,
+            latestSessions: sessions.reverse().slice(0,5)
+        }
+        
+        res.json({success: true, dashData});
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
 
 
 
-export {changeAvailablity, mentorList, loginMentor, sessionsMentor, sessionCancel, sessionComplete}
+export {changeAvailablity, mentorList, loginMentor, sessionsMentor, sessionCancel, sessionComplete, mentorDashboard}

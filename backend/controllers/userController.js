@@ -185,7 +185,7 @@ const bookSession = async (req, res) => {
       mentorId,
       userData,
       mentorData,
-      amount: mentorData.fees,
+      amount: mentorData.fees, //This connects the amount of session to fees of mentor
       slotTime,
       slotDate,
       date: Date.now(),

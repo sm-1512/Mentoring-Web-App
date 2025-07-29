@@ -2,93 +2,138 @@ import { createContext, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-
 export const MentorContext = createContext();
 
 const MentorContextProvider = (props) => {
-    const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    const [mToken, setMToken] = useState(localStorage.getItem("mToken") ? localStorage.getItem("mToken") : "");
-    const [sessions, setSessions] = useState([]);
-    
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const [mToken, setMToken] = useState(
+    localStorage.getItem("mToken") ? localStorage.getItem("mToken") : ""
+  );
+  const [sessions, setSessions] = useState([]);
+  const [dashData, setDashData] = useState(false);
 
-    const getSessions = async() => {
-      try {
-        const {data} = await axios.get(backendUrl + '/api/mentor/sessions', {headers:{mToken}});
-        if(data.success){
-          setSessions(data.sessions);
-          
-          
-        } else {
-          toast.error(data.message);
-        }
-
-      } catch (error) {
-        console.log(error);
-        toast.error(error.message);
+  const getSessions = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + "/api/mentor/sessions", {
+        headers: { mToken },
+      });
+      if (data.success) {
+        setSessions(data.sessions);
+      } else {
+        toast.error(data.message);
       }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
     }
-    
+  };
 
-    //Frontend(ie. MentorAppointments) will call this and get session from there and this gives a call to backend route which then gives call to controller which will execute everything.
-    const cancelSession = async(sessionId) => {
-      try {
-        const { data } = await axios.post(
-          backendUrl + "/api/mentor/cancel-session",
-          { sessionId },
-          { headers: { mToken } }
-        );
-        if(data.success){
-          toast.success(data.message);
-          getSessions();
-          
-        } else {
-          toast.error(data.message);
-        }
-      } catch (error) {
-        toast.error(error.message);
-        console.log(error);
+  //Frontend(ie. MentorAppointments) will call this and get session from there and this gives a call to backend route which then gives call to controller which will execute everything.
+  const cancelSession = async (sessionId) => {
+    try {
+      const { data } = await axios.post(
+        backendUrl + "/api/mentor/cancel-session",
+        { sessionId },
+        { headers: { mToken } }
+      );
+      if (data.success) {
+        toast.success(data.message);
+        getSessions();
+      } else {
+        toast.error(data.message);
       }
+    } catch (error) {
+      toast.error(error.message);
+      console.log(error);
     }
+  };
+//API for marking session comp
+  const completeSession = async (sessionId) => {
+    try {
+      const { data } = await axios.post(
+        backendUrl + "/api/mentor/complete-session",
+        { sessionId },
+        { headers: { mToken } }
+      );
+      if (data.success) {
+        toast.success(data.message);
+        getSessions();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+      console.log(error);
+    }
+  };
 
-    const completeSession = async(sessionId) => {
-      try {
-        const { data } = await axios.post(
-          backendUrl + "/api/mentor/complete-session",
-          { sessionId },
-          { headers: { mToken } }
-        );
-        if(data.success){
-          toast.success(data.message);
-          getSessions();
+  /* const mentorDashboardData = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + "/api/mentor/dashboard", {
+        headers: { mToken },
+      });
+      if (data.success) {
+        setDashData(data.dashData);
+        console.log(data.dashData);
         
-        } else {
-          toast.error(data.message);
-        }
-      } catch (error) {
-        toast.error(error.message);
-        console.log(error);
+      } else {
+        toast.error(data.message);
       }
-      
+    } catch (error) {
+      toast.error(error.message);
+      console.log(error);
     }
+  }; */
+  const mentorDashboardData = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + "/api/mentor/mentor-dashboard", {
+        headers: { mToken },
+      });
+
+      if (data.success) {
+        setDashData(data.dashData);
+        console.log(data.dashData);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(data.error);
+      console.error(error);
+    }
+  };
 
 
-    const value = {
-      mToken,
-      setMToken,
-      backendUrl,
-      sessions,
-      setSessions,
-      getSessions,
-      cancelSession,
-      completeSession,
-    };
 
-    return (
-        <MentorContext.Provider value={value}>
-            {props.children}
-        </MentorContext.Provider>
-    )
-}
+
+
+
+
+
+
+
+
+
+
+
+  const value = {
+    mToken,
+    setMToken,
+    backendUrl,
+    sessions,
+    setSessions,
+    getSessions,
+    cancelSession,
+    completeSession,
+    mentorDashboardData,
+    dashData, setDashData
+  };
+
+  return (
+    <MentorContext.Provider value={value}>
+      {props.children}
+    </MentorContext.Provider>
+  );
+};
 
 export default MentorContextProvider;
 

@@ -7,11 +7,11 @@ const authMentor = async(req, res, next) => {
     try {
         const {mtoken} = req.headers; //mtoken here is case sensitive. so mToken will not work as node js backend converts everything to lowercase.
         if(!mtoken){
-        //console.log("Headers Not Received:", req.headers);
+        console.log("Headers Not Received:", req.headers);
         return res.json({success: false, message: "Not Authorised: Login Again"});
         }
 
-        //console.log("Headers Received:", req.headers);
+        console.log("Headers Received:");
 
         //Decode Token
         const token_decode = jwt.verify(mtoken, process.env.JWT_SECRET);
