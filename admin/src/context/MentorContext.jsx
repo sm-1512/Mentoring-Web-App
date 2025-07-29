@@ -11,6 +11,7 @@ const MentorContextProvider = (props) => {
   );
   const [sessions, setSessions] = useState([]);
   const [dashData, setDashData] = useState(false);
+  const [profileData, setProfileData] = useState(false);
 
   const getSessions = async () => {
     try {
@@ -47,6 +48,7 @@ const MentorContextProvider = (props) => {
       console.log(error);
     }
   };
+
 //API for marking session comp
   const completeSession = async (sessionId) => {
     try {
@@ -67,23 +69,7 @@ const MentorContextProvider = (props) => {
     }
   };
 
-  /* const mentorDashboardData = async () => {
-    try {
-      const { data } = await axios.get(backendUrl + "/api/mentor/dashboard", {
-        headers: { mToken },
-      });
-      if (data.success) {
-        setDashData(data.dashData);
-        console.log(data.dashData);
-        
-      } else {
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error(error.message);
-      console.log(error);
-    }
-  }; */
+//API to get mentor Dashboard data
   const mentorDashboardData = async () => {
     try {
       const { data } = await axios.get(backendUrl + "/api/mentor/mentor-dashboard", {
@@ -97,23 +83,26 @@ const MentorContextProvider = (props) => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(data.error);
+      toast.error(error.message);
       console.error(error);
     }
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
+//API to get mentor profike
+  const getProfileData = async() => {
+    try {
+      console.log("request send to backend");
+      
+      const {data} = await axios.get(backendUrl + '/api/mentor/profile', {headers:{mToken}});
+      console.log(data.profileData);
+      setProfileData(data.profileData);
+      
+    } catch (error) {
+      console.log(error);
+      toast.error(error.message);
+    }
+    
+  }
 
   const value = {
     mToken,
@@ -125,7 +114,8 @@ const MentorContextProvider = (props) => {
     cancelSession,
     completeSession,
     mentorDashboardData,
-    dashData, setDashData
+    dashData, setDashData,
+    profileData, setProfileData, getProfileData,
   };
 
   return (

@@ -142,6 +142,45 @@ const mentorDashboard = async (req, res) => {
     }
 }
 
+//API to get mentor profile for mentor icon
+const mentorProfile = async(req, res) => {
+    
+    try {
+        const mentorId = req.mentor.id;
+        const profileData = await mentorModel.findById(mentorId).select("-password");
+        res.json({success:true, profileData});
+        
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+
+//API to update mentor profile data
+const updateMentorProfile = async(req, res) => {
+    try {
+        const mentorId = req.mentor.id;
+        const {name, graduationYear, fees, available} = req.body;
+        await mentorModel.findByIdAndUpdate(mentorId, {name, graduationYear, fees, available});
+        res.json({ success: true, message: 'Profile Updated' })
+    } catch (error) {
+        console.log(error);
+        return res.json({success:false, message:error.message});
+    }
+    
+
+}
 
 
-export {changeAvailablity, mentorList, loginMentor, sessionsMentor, sessionCancel, sessionComplete, mentorDashboard}
+
+export {
+    changeAvailablity, 
+    mentorList, 
+    loginMentor, 
+    sessionsMentor, 
+    sessionCancel, 
+    sessionComplete, 
+    mentorDashboard, 
+    mentorProfile, 
+    updateMentorProfile
+}
