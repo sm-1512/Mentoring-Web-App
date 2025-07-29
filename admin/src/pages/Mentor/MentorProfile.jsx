@@ -1,16 +1,48 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { MentorContext } from '../../context/MentorContext'
 import { AppContext } from '../../context/AppContext';
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const MentorProfile = () => {
   const {mToken, profileData, setProfileData, getProfileData} = useContext(MentorContext);
   const {currency, backendUrl} = useContext(AppContext);
   const [isEdit, setIsEdit] = useState(false);
+
+
+  const updateProfile = async() => {
+      try {
+        const updateData = {
+            name : profileData.name,
+            fees : profileData.fees,
+            currentCompany : profileData.currentCompany,
+            available: profileData.available,
+            about: profileData.about,
+        }
+        
+        const {data} = await axios.post(backendUrl + '/api/mentor/update-profile', updateData, {headers:{mToken}});
+        if (data.success) {
+          toast.success(data.message);
+          setIsEdit(false);
+          getProfileData();
+        } else {
+          toast.error(data.message);
+        }
+
+      } catch (error) {
+        toast.error(error.message);
+        console.log(error);
+      }
+  }
+
+
   useEffect(()=>{
     if(mToken){
       getProfileData();
     }
   },[mToken])
+
+
   return (
     profileData && (
       <div>
@@ -24,17 +56,46 @@ const MentorProfile = () => {
           </div>
 
           <div className="flex-1 border border-stone-100 rounded-lg p-8 py-7 bg-white">
-            {/* ----- Mentor Info : name, degree, experience ----- */}
+            {/* ----- Mentor Info : name, degree, experience, current company ----- */}
+            {isEdit ? (
+              <input
+                type="text"
+                onChange={(e) =>
+                  setProfileData((prev) => ({
+                    ...prev,
+                    name: e.target.value,
+                  }))
+                }
+              />
+            ) : (
+              <p className="flex items-center gap-2 text-3xl font-medium text-gray-700">
+                {profileData.name}
+              </p>
+            )}
 
-            <p className="flex items-center gap-2 text-3xl font-medium text-gray-700">
-              {profileData.name}
-            </p>
+            {isEdit ? (
+              <input
+                type="text"
+                onChange={(e) =>
+                  setProfileData((prev) => ({
+                    ...prev,
+                    currentCompany: e.target.value,
+                  }))
+                }
+              />
+            ) : (
+              <p className="flex items-center gap-2 text-xl font-medium text-gray-700">
+                {profileData.currentCompany}
+              </p>
+            )}
+
             <div className="flex items-center gap-2 mt-1 text-gray-600">
               <p>
                 {profileData.degree} - {profileData.branch}
               </p>
               <button className="py-0.5 px-2 border text-xs rounded-full">
-                {new Date().getFullYear() - profileData.graduationYear} Years Exp
+                {new Date().getFullYear() - profileData.graduationYear} Years
+                Exp
               </button>
             </div>
 
@@ -64,7 +125,7 @@ const MentorProfile = () => {
             </div>
 
             <p className="text-gray-600 font-medium mt-4">
-              Appointment fee:{" "}
+              Session fee:{" "}
               <span className="text-gray-800">
                 {currency}{" "}
                 {isEdit ? (

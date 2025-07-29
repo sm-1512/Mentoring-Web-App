@@ -160,8 +160,8 @@ const mentorProfile = async(req, res) => {
 const updateMentorProfile = async(req, res) => {
     try {
         const mentorId = req.mentor.id;
-        const {name, graduationYear, fees, available} = req.body;
-        await mentorModel.findByIdAndUpdate(mentorId, {name, graduationYear, fees, available});
+        const {name, currentCompany, fees, available, about} = req.body;
+        await mentorModel.findByIdAndUpdate(mentorId, {name, currentCompany, fees, available, about});
         res.json({ success: true, message: 'Profile Updated' })
     } catch (error) {
         console.log(error);
