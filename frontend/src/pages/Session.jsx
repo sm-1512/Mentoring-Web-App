@@ -170,6 +170,19 @@ useEffect(() => {
               </span>
             </div>
 
+            <div
+              className={`flex items-center gap-2 text-sm text-center ${
+                mentorInfo.available ? "text-green-500" : "text-gray-500"
+              }`}
+            >
+              <p
+                className={`w-2 h-2 rounded-full ${
+                  mentorInfo.available ? "bg-green-500" : "bg-gray-500"
+                }`}
+              ></p>
+              <p>{mentorInfo.available ? "Available" : "Not Available"}</p>
+            </div>
+
             <div className="mt-4">
               <p className="text-sm font-medium text-gray-800 flex items-center gap-1">
                 About

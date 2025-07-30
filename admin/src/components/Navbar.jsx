@@ -4,18 +4,21 @@ import { assets } from "../assets/assets.js";
 import { AdminContext } from "../context/AdminContext";
 import { useNavigate } from "react-router-dom";
 import { FaSignOutAlt } from "react-icons/fa"; // Added an icon for the button
+import { MentorContext } from "../context/MentorContext.jsx";
 
 const Navbar = () => {
   // --- All original logic is preserved ---
   const { aToken, setAToken } = useContext(AdminContext);
+  const { mToken, setMToken } = useContext(MentorContext);
+
   const navigate = useNavigate();
 
   const logout = () => {
     navigate("/");
-    if (aToken) {
-      setAToken("");
-      localStorage.removeItem("aToken");
-    }
+    mToken && setMToken("");
+    mToken && localStorage.removeItem("mToken");
+    aToken && setAToken("");
+    aToken && localStorage.removeItem("aToken");
   };
 
   // --- The UI is updated for a more compact height ---
@@ -44,6 +47,7 @@ const Navbar = () => {
         </div>
         <button
           onClick={logout}
+          
           className="flex items-center gap-2 bg-black text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-800 focus:outline-none focus:ring-4 focus:ring-gray-300 transition-all duration-300"
           aria-label="Logout"
         >

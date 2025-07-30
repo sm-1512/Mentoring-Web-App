@@ -154,12 +154,12 @@ const MySessions = () => {
             </div>
             <div></div>
             <div className="flex flex-col gap-2 justify-end">
-              {!item.cancelled && item.payment && (
+              {!item.cancelled && item.payment && !item.isCompleted && (
                 <p className="sm:min-w-48 py-2 text-center border rounded text-[#696969]  bg-[#EAEFFF]">
                   Already Paid
                 </p>
               )}
-              {!item.cancelled && !item.payment && (
+              {!item.cancelled && !item.payment && !item.isCompleted && (
                 <button
                   onClick={() => sessionRazorpay(item._id)}
                   className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-primary hover:text-white transition-all duration-300"
@@ -167,16 +167,24 @@ const MySessions = () => {
                   Pay Online
                 </button>
               )}
-              {item.cancelled ? (
-                <p className="sm:min-w-48 py-2 border text-center border-red-500 rounded text-red-500">
-                  Cancelled
-                </p>
-              ) : (
+
+              {item.isCompleted && (
+                <button className="sm:min-w-48 py-2 border border-green-500 rounded text-green-500">
+                  Completed
+                </button>
+              )}
+
+              {!item.cancelled && !item.isCompleted && (
                 <button
                   onClick={() => cancelSession(item._id)}
-                  className="text-sm text-stone-500 text-center sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300"
+                  className="text-[#696969] sm:min-w-48 py-2 border rounded hover:bg-red-600 hover:text-white transition-all duration-300"
                 >
-                  Cancel Session
+                  Cancel appointment
+                </button>
+              )}
+              {item.cancelled && !item.isCompleted && (
+                <button className="sm:min-w-48 py-2 border border-red-500 rounded text-red-500">
+                  Session cancelled
                 </button>
               )}
             </div>
