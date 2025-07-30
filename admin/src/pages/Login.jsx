@@ -4,6 +4,8 @@ import { AdminContext } from "../context/AdminContext";
 import { toast } from "react-toastify";
 import { HiOutlineMail, HiOutlineLockClosed } from "react-icons/hi";
 import { MentorContext } from "../context/MentorContext";
+import {useNavigate} from 'react-router-dom'
+
 
 const Login = () => {
   const { setAToken, backendUrl } = useContext(AdminContext);
@@ -11,6 +13,7 @@ const Login = () => {
   const [state, setState] = useState("Admin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
@@ -24,6 +27,8 @@ const Login = () => {
         if (data.success) {
           localStorage.setItem("aToken", data.token);
           setAToken(data.token);
+          toast.success("You logged in successfully!");
+          navigate("/admin-dashboard");
         } else {
           toast.error(data.message || "Login failed");
         }
@@ -36,9 +41,8 @@ const Login = () => {
         if (data.success) {
           localStorage.setItem("mToken", data.token);
           setMToken(data.token);
-          console.log(data.token);
-          
-          toast.success("Mentor logged in successfully!");
+          toast.success("You logged in successfully!");
+          navigate("/mentor-dashboard");
         } else {
           toast.error(data.message || "Login failed");
         }
