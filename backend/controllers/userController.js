@@ -317,6 +317,22 @@ const blogsList = async (req, res) => {
   }
 };
 
+//API to get individual blog
+const getSingleBlog = async (req, res) => {
+  try {
+    const blog = await blogModel.findById(req.params.id).populate("createdBy", "-password");
+    if(!blog){
+      return res.json({success:false, message:"Blog Not Found"});
+    } else {
+      return res.json({success: true, blog});
+    }
+  } catch (error) {
+    console.error("Error fetching blogs:", error);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+}
+
+
 export {
   registerUser,
   loginUser,
@@ -327,5 +343,6 @@ export {
   cancelSession,
   paymentRazorpay,
   verifyRazorpay,
-  blogsList
+  blogsList,
+  getSingleBlog,
 };

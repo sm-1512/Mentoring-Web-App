@@ -12,6 +12,7 @@ import Blogs from "./pages/Blogs";
 import Session from "./pages/Session";
 import Mentors from "./pages/Mentors";
 import { ToastContainer, toast } from "react-toastify";
+import BlogPage from "./pages/BlogPage";
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/my-sessions" element={<MySessions />} />
         <Route path="/session/:mentorId" element={<Session />} />
         <Route path="/mentors" element={<Mentors />} />
+        <Route path="/blogs/:id" element={<BlogPage />} />
       </Routes>
       <Footer />
     </div>

@@ -7,12 +7,14 @@ import {
   Button,
 } from "@material-tailwind/react";
 import { AppContext } from "../context/AppContext";
+import { useNavigate } from "react-router-dom";
 
 
 
 const AllBlogsPage = () => {
 
   const { blogs, setBlogs, getBlogs } = useContext(AppContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getBlogs();
@@ -52,8 +54,10 @@ const AllBlogsPage = () => {
               <Button
                 size="sm"
                 color="blue"
-                onClick={() => alert(`Go to blog ${blog._id}`)}
+                onClick={() => navigate(`/blogs/${blog._id}`)}
               >
+                {" "}
+                
                 Read More
               </Button>
             </CardFooter>
