@@ -13,6 +13,7 @@ import earning_icon from './earning_icon.svg'
 import patients_icon from './patients_icon.svg'
 import add_blogs from './add_blogs.svg'
 import upload_arrow from './upload_arrow.svg'
+import my_blogs from './my_blogs.svg'
 
 
 export const assets = {
@@ -31,4 +32,5 @@ export const assets = {
     earning_icon, 
     add_blogs,
     upload_arrow,
+    my_blogs,
 }

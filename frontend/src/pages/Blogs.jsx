@@ -23,7 +23,7 @@ const AllBlogsPage = () => {
   return (
     <section className="container mx-auto px-6 py-12">
       <Typography variant="h2" color="blue-gray" className="mb-6">
-        Read About Their Experiences
+        Our Blogs
       </Typography>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -32,7 +32,7 @@ const AllBlogsPage = () => {
             <img
               src={blog.coverImage}
               alt={blog.title}
-              className="h-56 w-full object-cover rounded-t-xl"
+              className="h-56 w-full object-contain rounded-t-xl"
             />
             <CardBody>
               <Typography variant="h5" color="blue-gray" className="mb-2">

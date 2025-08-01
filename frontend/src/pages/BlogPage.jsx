@@ -36,7 +36,7 @@ const SingleBlogPage = () => {
         <img
           src={blog.coverImage}
           alt={blog.title}
-          className="h-72 w-full object-cover rounded-xl mb-6"
+          className="w-full max-h-[500px] object-contain rounded-xl mb-6"
         />
 
         <Typography variant="h3" color="blue-gray" className="mb-4">
@@ -57,7 +57,7 @@ const SingleBlogPage = () => {
             <img
               src={blog.createdBy.image}
               alt={blog.createdBy.name}
-              className="w-28 h-28 object-cover rounded-full border-2 border-gray-300"
+              className="w-28 h-28 object-cover rounded-full border-2 border-gray-300 bg-white"
             />
 
             <div>

@@ -1,5 +1,5 @@
 import express from "express";
-import { mentorList, loginMentor, sessionsMentor, sessionCancel, sessionComplete, mentorDashboard, mentorProfile, updateMentorProfile, uploadBlogs } from "../controllers/mentorController.js";
+import { mentorList, loginMentor, sessionsMentor, sessionCancel, sessionComplete, mentorDashboard, mentorProfile, updateMentorProfile, uploadBlogs, getMentorBlogs } from "../controllers/mentorController.js";
 import authMentor from "../middlewares/authMentor.js";
 import upload from "../middlewares/multer.js"
 const mentorRouter = express.Router();
@@ -13,5 +13,6 @@ mentorRouter.get('/mentor-dashboard', authMentor, mentorDashboard);
 mentorRouter.get('/profile', authMentor, mentorProfile);
 mentorRouter.post('/update-profile', authMentor, updateMentorProfile);
 mentorRouter.post('/add-blogs', authMentor, upload.single('coverImage') ,uploadBlogs);
+mentorRouter.get('/my-blogs', authMentor, getMentorBlogs);
 
 export default mentorRouter;

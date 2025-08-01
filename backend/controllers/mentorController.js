@@ -120,6 +120,9 @@ const mentorDashboard = async (req, res) => {
             if(item.isCompleted || item.payment){
                 earnings += item.amount;
             }
+            if(item.payment && !item.isCompleted){
+                earnings -= item.amount;
+            }
         })
 
         let students = [];
@@ -224,6 +227,17 @@ const uploadBlogs = async (req, res) => {
     }
 };
 
+//API to view mentor blogs when they log in
+const getMentorBlogs = async (req, res) => {
+    try {
+        const mentorId = req.mentor.id;
+        const blogs = await blogModel.find({createdBy: mentorId}).populate("createdBy", "-password");
+        return res.json({success:true, blogs});
+    } catch (error) {
+        console.error("Blog Upload Error:", error);
+        return res.json({ success: false, message: "Server error: " + error.message });
+    }
+}
 
 
 
@@ -238,4 +252,5 @@ export {
     mentorProfile, 
     updateMentorProfile,
     uploadBlogs,
+    getMentorBlogs,
 }
