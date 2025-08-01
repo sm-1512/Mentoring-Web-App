@@ -42,7 +42,7 @@ const Navbar = () => {
         <div className="text-right">
           <p className="font-semibold text-gray-800">Dashboard User</p>
           <p className="text-xs text-gray-500">
-            {aToken ? "Administrator" : "Doctor"}
+            {aToken ? "Administrator" : "Mentor"}
           </p>
         </div>
         <button

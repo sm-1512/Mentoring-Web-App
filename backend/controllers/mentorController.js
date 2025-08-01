@@ -2,6 +2,8 @@ import mentorModel from "../models/mentorModel.js";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import sessionModel from "../models/sessionModel.js";
+import blogModel from "../models/blogModel.js"
+import { v2 as cloudinary } from "cloudinary";
 
 
 const changeAvailablity = async(req, res) => {
@@ -16,6 +18,7 @@ const changeAvailablity = async(req, res) => {
     }
 }
 
+//API to get list of all mentors for frontend
 const mentorList = async(req, res) => {
     try {
         const mentors = await mentorModel.find({}).select(['-password', '-email']);
@@ -87,7 +90,6 @@ const sessionCancel = async (req, res) => {
         res.json({ success: false, message: error.message })
     }  
 }
-
 
 //API for mentor to mark the session completed
 const sessionComplete = async(req, res) => {
@@ -171,6 +173,58 @@ const updateMentorProfile = async(req, res) => {
 
 }
 
+//API to upload blogs
+const uploadBlogs = async (req, res) => {
+    try {
+        const mentorId = req.mentor?.id;
+        const { title, body } = req.body;
+        const imageFile = req.file;
+
+        // Basic validations
+        if (!mentorId) {
+            return res.json({ success: false, message: "Unauthorized: Mentor ID not found." });
+        }
+
+        if (!title || !body) {
+            return res.json({ success: false, message: "Missing title or body." });
+        }
+
+        if (!imageFile) {
+            return res.json({ success: false, message: "Cover image is required." });
+        }
+
+        // Upload to Cloudinary
+        let imageUrl;
+        try {
+            const imageUpload = await cloudinary.uploader.upload(imageFile.path, {
+                resource_type: "image",
+                folder: "blogs/covers",
+            });
+            imageUrl = imageUpload.secure_url;
+        } catch (uploadErr) {
+            console.error("Cloudinary Upload Failed:", uploadErr);
+            return res.status(500).json({ success: false, message: "Image upload failed." });
+        }
+
+        // Create new blog
+        const newBlog = new blogModel({
+            title,
+            body,
+            coverImage: imageUrl,
+            createdBy: mentorId, 
+        });
+
+        await newBlog.save();
+
+        return res.json({ success: true, message: "Blog added successfully." });
+
+    } catch (error) {
+        console.error("Blog Upload Error:", error);
+        return res.json({ success: false, message: "Server error: " + error.message });
+    }
+};
+
+
 
 
 export {
@@ -182,5 +236,6 @@ export {
     sessionComplete, 
     mentorDashboard, 
     mentorProfile, 
-    updateMentorProfile
+    updateMentorProfile,
+    uploadBlogs,
 }

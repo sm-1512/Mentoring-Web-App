@@ -15,6 +15,7 @@ import Login from "./pages/Login";
 import MentorAppointments from "./pages/Mentor/MentorAppointments";
 import MentorDashboard from "./pages/Mentor/MentorDashboard";
 import MentorProfile from "./pages/Mentor/MentorProfile";
+import AddBlogs from "./pages/Mentor/AddBlogs";
 
 const App = () => {
   const { aToken } = useContext(AdminContext);
@@ -40,6 +41,7 @@ const App = () => {
               <Route path="/mentor-dashboard" element={<MentorDashboard />} />
               <Route path="/mentor-appointments" element={<MentorAppointments />}/>
               <Route path="/mentor-profile" element={<MentorProfile />} />
+              <Route path="/add-blogs" element={<AddBlogs />} />
             </Routes>
           </div>
         </div>

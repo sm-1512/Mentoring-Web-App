@@ -12,6 +12,7 @@ const AppContextProvider = (props) => {
     const [mentors, setMentors] = useState([]);
     const [token, setToken] = useState(localStorage.getItem('token')?localStorage.getItem('token'):false);
     const [userData, setUserData] = useState(false);
+    const [blogs, setBlogs] = useState([]);
 
     const getMentorsData = async() => {
         try {
@@ -24,8 +25,7 @@ const AppContextProvider = (props) => {
             }
         } catch (error) {
             console.log(error);
-        
-            toast.error(error.message)
+            toast.error(error.message);
         }
     }
 
@@ -43,6 +43,20 @@ const AppContextProvider = (props) => {
         }
     }
 
+    const getBlogs = async() => {
+        try {
+            const { data } = await axios.get(backendUrl + "/api/user/blogs");
+            if(data.success){
+                setBlogs(data.blogs);
+            } else {
+                toast.error(data.message);
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message);
+        }
+    }
+
     const value = {
       mentors,
       currencySymbol,
@@ -53,6 +67,7 @@ const AppContextProvider = (props) => {
       setUserData,
       loadUserProfileData,
       getMentorsData,
+      blogs, setBlogs, getBlogs,
     };
 
     useEffect(() => {

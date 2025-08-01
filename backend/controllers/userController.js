@@ -6,6 +6,7 @@ import { v2 as cloudinary } from "cloudinary";
 import mentorModel from "../models/mentorModel.js";
 import sessionModel from "../models/sessionModel.js";
 import razorpay from "razorpay";
+import blogModel from "../models/blogModel.js";
 
 //API to register user
 const registerUser = async (req, res) => {
@@ -215,6 +216,7 @@ const listSession = async (req, res) => {
   }
 };
 
+//API to cancel session
 const cancelSession = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -300,6 +302,21 @@ const verifyRazorpay = async (req, res) => {
   }
 };
 
+//API to get all blogs list
+const blogsList = async (req, res) => {
+  try {
+    const blogs = await blogModel
+      .find()
+      .populate("createdBy", "-password -__v") // password and __v should be avoided
+      .sort({ createdAt: -1 }); //latest blogs first
+
+    return res.status(200).json({ success: true, blogs });
+  } catch (error) {
+    console.error("Error fetching blogs:", error);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -310,4 +327,5 @@ export {
   cancelSession,
   paymentRazorpay,
   verifyRazorpay,
+  blogsList
 };

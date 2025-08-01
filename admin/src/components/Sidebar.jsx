@@ -83,7 +83,7 @@ const Sidebar = () => {
             <img className="min-w-5" src={assets.appointment_icon} alt="" />
             <p className="hidden md:block">Sessions</p>
           </NavLink>
-          
+
           <NavLink
             to={"/mentor-profile"}
             className={({ isActive }) =>
@@ -94,6 +94,17 @@ const Sidebar = () => {
           >
             <img className="min-w-5" src={assets.people_icon} alt="" />
             <p className="hidden md:block">Profile</p>
+          </NavLink>
+          <NavLink
+            to={"/add-blogs"}
+            className={({ isActive }) =>
+              `flex items-center gap-3 py-3.5 px-3 md:px-9 md:min-w-72 cursor-pointer ${
+                isActive ? "bg-[#F2F3FF] border-r-4 border-secondary" : ""
+              }`
+            }
+          >
+            <img className="min-w-5" src={assets.add_blogs} alt="" />
+            <p className="hidden md:block">Add Blogs</p>
           </NavLink>
         </ul>
       )}
