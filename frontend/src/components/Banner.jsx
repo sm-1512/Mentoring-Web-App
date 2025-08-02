@@ -6,7 +6,7 @@ const Banner = () => {
     const navigate = useNavigate();
   return (
     <section className="flex flex-col md:flex-row items-center justify-between bg-gradient-to-r from-[#141E30] to-[#243B55] rounded-2xl px-6 md:px-10 lg:px-20 py-12 overflow-hidden shadow-md mt-12">
-      {/* --------- Left Section --------- */}
+      {/*  Left Section  */}
       <div className="md:w-1/2 flex flex-col justify-center gap-6 text-white text-center md:text-left">
         <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
           What Are You Waiting For?
@@ -26,7 +26,7 @@ const Banner = () => {
         </button>
       </div>
 
-      {/* --------- Right Section --------- */}
+      {/*  Right Section  */}
       <div className="md:w-1/2 mt-10 md:mt-0 flex justify-center items-center">
         <img
           src={assets.JoinNow}

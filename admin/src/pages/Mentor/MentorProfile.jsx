@@ -7,7 +7,7 @@ import axios from "axios";
 const MentorProfile = () => {
   const {mToken, profileData, setProfileData, getProfileData} = useContext(MentorContext);
   const {currency, backendUrl} = useContext(AppContext);
-  const [isEdit, setIsEdit] = useState(false);
+  const [isEditing, setisEditing] = useState(false);
 
 
   const updateProfile = async() => {
@@ -23,7 +23,7 @@ const MentorProfile = () => {
         const {data} = await axios.post(backendUrl + '/api/mentor/update-profile', updateData, {headers:{mToken}});
         if (data.success) {
           toast.success(data.message);
-          setIsEdit(false);
+          setisEditing(false);
           getProfileData();
         } else {
           toast.error(data.message);
@@ -56,8 +56,8 @@ const MentorProfile = () => {
           </div>
 
           <div className="flex-1 border border-stone-100 rounded-lg p-8 py-7 bg-white">
-            {/* ----- Mentor Info : name, degree, experience, current company ----- */}
-            {isEdit ? (
+            {/*  Mentor Info : name, degree, experience, current company  */}
+            {isEditing ? (
               <input
                 type="text"
                 onChange={(e) =>
@@ -73,7 +73,7 @@ const MentorProfile = () => {
               </p>
             )}
 
-            {isEdit ? (
+            {isEditing ? (
               <input
                 type="text"
                 onChange={(e) =>
@@ -105,7 +105,7 @@ const MentorProfile = () => {
                 About :
               </p>
               <p className="text-sm text-gray-600 max-w-[700px] mt-1">
-                {isEdit ? (
+                {isEditing ? (
                   <textarea
                     onChange={(e) =>
                       setProfileData((prev) => ({
@@ -128,7 +128,7 @@ const MentorProfile = () => {
               Session fee:{" "}
               <span className="text-gray-800">
                 {currency}{" "}
-                {isEdit ? (
+                {isEditing ? (
                   <input
                     type="number"
                     onChange={(e) =>
@@ -149,7 +149,7 @@ const MentorProfile = () => {
               <input
                 type="checkbox"
                 onChange={() =>
-                  isEdit &&
+                  isEditing &&
                   setProfileData((prev) => ({
                     ...prev,
                     available: !prev.available,
@@ -160,7 +160,7 @@ const MentorProfile = () => {
               <label htmlFor="">Available</label>
             </div>
 
-            {isEdit ? (
+            {isEditing ? (
               <button
                 onClick={updateProfile}
                 className="px-4 py-1 border border-primary text-sm rounded-full mt-5 hover:bg-primary hover:text-white transition-all"
@@ -169,7 +169,7 @@ const MentorProfile = () => {
               </button>
             ) : (
               <button
-                onClick={() => setIsEdit((prev) => !prev)}
+                onClick={() => setisEditing((prev) => !prev)}
                 className="px-4 py-1 border border-primary text-sm rounded-full mt-5 hover:bg-primary hover:text-white transition-all"
               >
                 Edit

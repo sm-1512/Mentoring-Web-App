@@ -6,7 +6,7 @@ const Header = () => {
   const navigate = useNavigate();
   return (
     <header className="flex flex-col md:flex-row flex-wrap bg-gradient-to-r from-[#243B55] to-[#141E30] rounded-2xl px-6 md:px-10 lg:px-20 py-12 overflow-hidden shadow-md">
-      {/* --------- Left Section --------- */}
+      {/*  Left Section  */}
       <div className="md:w-1/2 flex flex-col justify-center gap-6 text-white">
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
           Learn from Those Who Have Been There
@@ -36,7 +36,7 @@ const Header = () => {
         </button>
       </div>
 
-      {/* --------- Right Section --------- */}
+      {/*  Right Section  */}
       <div className="md:w-1/2 flex justify-center items-center mt-10 md:mt-0">
         <img
           src={assets.header_img}

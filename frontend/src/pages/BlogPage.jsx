@@ -47,7 +47,7 @@ const SingleBlogPage = () => {
           {blog.body}
         </Typography>
 
-        {/* --- Mentor Details Section --- */}
+        {/*  Mentor Details Section  */}
         <div className="border-t pt-6 mt-8">
           <Typography variant="h5" color="blue-gray" className="mb-4">
             About the Mentor

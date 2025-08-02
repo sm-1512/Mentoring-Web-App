@@ -1,13 +1,13 @@
 import React, { useContext } from "react";
-// I'm assuming your assets file correctly exports the logo you provided.
+
 import { assets } from "../assets/assets.js";
 import { AdminContext } from "../context/AdminContext";
 import { useNavigate } from "react-router-dom";
-import { FaSignOutAlt } from "react-icons/fa"; // Added an icon for the button
+import { FaSignOutAlt } from "react-icons/fa";
 import { MentorContext } from "../context/MentorContext.jsx";
 
 const Navbar = () => {
-  // --- All original logic is preserved ---
+  
   const { aToken, setAToken } = useContext(AdminContext);
   const { mToken, setMToken } = useContext(MentorContext);
 
@@ -21,16 +21,16 @@ const Navbar = () => {
     aToken && localStorage.removeItem("aToken");
   };
 
-  // --- The UI is updated for a more compact height ---
+
   return (
     <div className="flex justify-between items-center px-4 sm:px-8 py-2 bg-white shadow-md sticky top-0 z-50">
       {/* Logo and Title */}
       <div className="flex items-center gap-4">
         <img
-          className="h-10 w-auto cursor-pointer" // Reduced height, width is automatic
-          src={assets.admin_logo} // This should be your "MENTOS" logo
+          className="h-10 w-auto cursor-pointer"
+          src={assets.admin_logo} 
           alt="Company Logo"
-          onClick={() => navigate("/dashboard")} // Added navigation to dashboard on logo click
+          onClick={() => navigate("/dashboard")} 
         />
         <h1 className="hidden sm:block text-lg font-bold text-gray-700">
           Dashboard Panel

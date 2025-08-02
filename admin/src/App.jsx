@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css"; // <-- Make sure this is imported!
+import "react-toastify/dist/ReactToastify.css"; 
 import { AdminContext } from "./context/AdminContext";
 import { MentorContext } from "./context/MentorContext";
 import { Route, Routes } from "react-router-dom";
@@ -17,6 +17,7 @@ import MentorDashboard from "./pages/Mentor/MentorDashboard";
 import MentorProfile from "./pages/Mentor/MentorProfile";
 import AddBlogs from "./pages/Mentor/AddBlogs";
 import MyBlogs from "./pages/Mentor/MyBlogs";
+import BlogPage from "./pages/Mentor/BlogPage"
 
 const App = () => {
   const { aToken } = useContext(AdminContext);
@@ -44,6 +45,7 @@ const App = () => {
               <Route path="/mentor-profile" element={<MentorProfile />} />
               <Route path="/add-blogs" element={<AddBlogs />} />
               <Route path="/my-blogs" element={<MyBlogs />} />
+              <Route path="/blogs/:id" element={<BlogPage />} />
             </Routes>
           </div>
         </div>

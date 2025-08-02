@@ -90,7 +90,7 @@ const Navbar = () => {
           alt=""
         />
 
-        {/* ---- Mobile Menu ---- */}
+        {/*  Mobile Menu  */}
         <div
   className={`md:hidden fixed right-0 top-0 bottom-0 z-20 overflow-hidden bg-white transition-all ${
     showMenu ? "w-full" : "h-0 w-0"

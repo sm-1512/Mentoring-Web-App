@@ -58,7 +58,7 @@ const AddBlogs = () => {
           </h1>
 
           <div className="space-y-8">
-            {/* --- Cover Image Upload --- */}
+            {/*  Cover Image Upload */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Cover Image
@@ -103,7 +103,7 @@ const AddBlogs = () => {
               </div>
             </div>
 
-            {/* --- Blog Title --- */}
+            {/*  Blog Title  */}
             <div>
               <label
                 htmlFor="blog-title"
@@ -122,7 +122,7 @@ const AddBlogs = () => {
               />
             </div>
 
-            {/* --- Blog Body --- */}
+            {/*  Blog Body  */}
             <div>
               <label
                 htmlFor="blog-body"
@@ -141,7 +141,7 @@ const AddBlogs = () => {
               />
             </div>
 
-            {/* --- Submit Button --- */}
+            {/* Submit Button  */}
             <div className="pt-5">
               <div className="flex justify-end">
                 <button

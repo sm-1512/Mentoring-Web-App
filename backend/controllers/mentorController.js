@@ -5,7 +5,7 @@ import sessionModel from "../models/sessionModel.js";
 import blogModel from "../models/blogModel.js"
 import { v2 as cloudinary } from "cloudinary";
 
-
+//API to change availability
 const changeAvailablity = async(req, res) => {
     try {
         const {mentorId} = req.body;
@@ -13,8 +13,8 @@ const changeAvailablity = async(req, res) => {
         await mentorModel.findByIdAndUpdate(mentorId, {available : !mentorData.available});
         res.json({success: true, message: 'Availability changed'});
     } catch (error) {
-        console.log(error);
-        res.json({success: false, message: error.message});
+        console.error("Error in changing availability", error);
+        return res.json({ success: false, message: "Server error: " + error.message });
     }
 }
 
@@ -25,8 +25,8 @@ const mentorList = async(req, res) => {
 
         res.json({success: true, mentors});
     } catch (error) {
-        console.log(error);
-        res.json({success: false, message: error.message});
+        console.error("Error in getting mentor list", error);
+        return res.json({ success: false, message: "Server error: " + error.message });
     }
 }
 
@@ -55,20 +55,20 @@ const loginMentor = async (req, res) => {
         }
 
     } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message });
+        console.error("Mentor Login Error:", error);
+        return res.json({ success: false, message: "Server error: " + error.message });
     }
 };
 
-// API to get doctor sessiosn for mentor panel
+// API to get mentor sessiosn for mentor panel
 const sessionsMentor = async(req, res) => {
     try {
         const mentorId = req.mentor.id;
         const sessions = await sessionModel.find({mentorId});
         res.json({success:true, sessions});
     } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
+        console.error("Error in getting mentor session", error);
+        return res.json({ success: false, message: "Server error: " + error.message });
     }
 }
 
@@ -86,8 +86,8 @@ const sessionCancel = async (req, res) => {
 
 
     } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
+        console.error("Error in cancelling session", error);
+        return res.json({ success: false, message: "Server error: " + error.message });
     }  
 }
 
@@ -104,8 +104,8 @@ const sessionComplete = async(req, res) => {
             return res.json({success:false, message:"Mark Failed"});
         }
     } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: error.message });
+        console.error("Error in marking session complete", error);
+        return res.json({ success: false, message: "Server error: " + error.message });
     }
     
 }
@@ -142,8 +142,8 @@ const mentorDashboard = async (req, res) => {
         
         res.json({success: true, dashData});
     } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
+        console.error("Error in getting dashboard data", error);
+        return res.json({ success: false, message: "Server error: " + error.message });
     }
 }
 
@@ -156,8 +156,8 @@ const mentorProfile = async(req, res) => {
         res.json({success:true, profileData});
         
     } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
+        console.error("Error in getting mentor profile", error);
+        return res.json({ success: false, message: "Server error: " + error.message });
     }
 }
 
@@ -169,8 +169,8 @@ const updateMentorProfile = async(req, res) => {
         await mentorModel.findByIdAndUpdate(mentorId, {name, currentCompany, fees, available, about});
         res.json({ success: true, message: 'Profile Updated' })
     } catch (error) {
-        console.log(error);
-        return res.json({success:false, message:error.message});
+        console.error("Error in updating mentor profile:", error);
+        return res.json({ success: false, message: "Server error: " + error.message });
     }
     
 
@@ -234,12 +234,86 @@ const getMentorBlogs = async (req, res) => {
         const blogs = await blogModel.find({createdBy: mentorId}).populate("createdBy", "-password");
         return res.json({success:true, blogs});
     } catch (error) {
-        console.error("Blog Upload Error:", error);
+        console.error("Blog Retrieval Error:", error);
         return res.json({ success: false, message: "Server error: " + error.message });
     }
 }
 
+//API to get individual blog
+const getSingleBlog = async (req, res) => {
+  try {
+    const mentorId = req.mentor.id;
+    const blog = await blogModel.findById(req.params.id);
 
+    //Making sure that blog is written by the mentor
+    if(blog.createdBy.toString() !== mentorId) {
+        return res.json({success: false, message:"Unauthorised"});
+    }
+
+    if(!blog) {
+        return res.json({success: false, message:"Blog Not Found"});
+    } else {
+      return res.json({success: true, blog});
+    }
+  } catch (error) {
+    console.error("Error fetching blogs:", error);
+    return res.status(500).json({ success: false, message: "Internal Server Error" });
+  }
+}
+
+//API to edit blogs
+const updateBlog = async(req, res) => {
+    try {
+        const mentorId = req.mentor.id;
+        const blog = await blogModel.findById(req.params.id);
+        if(!blog) {
+            return res.json({success: false, message:"Blog Not Found"});
+        }
+
+        //Making sure that blog is written by the mentor
+        if(blog.createdBy.toString() !== mentorId) {
+            return res.json({success: false, message:"Unauthorised"});
+        }
+
+        const {title, body, coverImage} = req.body;
+
+        if(!title || !body || !coverImage) return res.json({success:false, message:"All fields are required"})
+        blog.title = title;
+        blog.body = body;
+        blog.coverImage = coverImage;
+
+        await blog.save();
+        return res.json({success: true, message: "Blog updated", blog});
+
+    } catch (error) {
+        console.error("Blog Update Error:", error);
+        return res.json({ success: false, message: "Server error: " + error.message });
+    }
+}
+
+//API to delete blogs
+const deleteBlog = async(req, res) => {
+    try {
+        const mentorId = req.mentor.id;
+        const blog = await blogModel.findById(req.params.id);
+
+        if(!blog) {
+            return res.json({success: false, message:"Blog Not Found"});
+        }
+
+        //Making sure that blog is written by the mentor
+        if(blog.createdBy.toString() !== mentorId) {
+            return res.json({success: false, message:"Unauthorised"});
+        }
+
+        await blog.deleteOne();
+        res.json({ success: true, message: "Blog deleted successfully" });
+
+    } catch (error) {
+        console.error("Blog Delete Error:", error);
+        return res.json({ success: false, message: "Server error: " + error.message });
+    }
+}
 
 export {
     changeAvailablity, 
@@ -253,4 +327,7 @@ export {
     updateMentorProfile,
     uploadBlogs,
     getMentorBlogs,
+    updateBlog,
+    deleteBlog, 
+    getSingleBlog,
 }

@@ -10,11 +10,13 @@ import {
   CardBody,
   CardFooter,
 } from "@material-tailwind/react";
+import { useNavigate } from "react-router-dom";
 
 const MyBlogs = () => {
   const { backendUrl } = useContext(AppContext);
   const { mToken } = useContext(MentorContext);
   const [blogs, setBlogs] = useState([]);
+  const navigate = useNavigate();
 
   const getMyBlogs = async () => {
     try {
@@ -69,6 +71,15 @@ const MyBlogs = () => {
                 </Button>
                 <Button size="sm" variant="outlined">
                   💬 {blog.commentCount}
+                </Button>
+
+                <Button
+                  size="sm"
+                  color="blue"
+                  onClick={() => navigate(`/blogs/${blog._id}`)}
+                >
+                  {" "}
+                  Read More
                 </Button>
               </CardFooter>
             </Card>
