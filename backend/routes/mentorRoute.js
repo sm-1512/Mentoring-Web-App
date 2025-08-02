@@ -14,7 +14,7 @@ mentorRouter.get('/profile', authMentor, mentorProfile);
 mentorRouter.post('/update-profile', authMentor, updateMentorProfile);
 mentorRouter.post('/add-blogs', authMentor, upload.single('coverImage') ,uploadBlogs);
 mentorRouter.get('/my-blogs', authMentor, getMentorBlogs);
-mentorRouter.patch('/update-blog/:id', authMentor, updateBlog);
+mentorRouter.patch('/update-blog/:id', upload.single('coverImage'), authMentor, updateBlog);
 mentorRouter.delete('/delete-blog/:id', authMentor, deleteBlog);
 mentorRouter.get('/blogs/:id', authMentor, getSingleBlog);
 

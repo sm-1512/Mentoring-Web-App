@@ -1,26 +1,21 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
-import {
-  Typography,
-  Card,
-  Button,
-} from "@material-tailwind/react";
+import { Typography, Card, Button } from "@material-tailwind/react";
 import { toast } from "react-toastify";
 import { MentorContext } from "../../context/MentorContext";
 import { AppContext } from "../../context/AppContext";
-import Swal from 'sweetalert2';
-
-
-
+import Swal from "sweetalert2";
+import { assets } from "../../assets/assets";
 
 const BlogPage = () => {
   const { id } = useParams();
   const [blog, setBlog] = useState(null);
   const { backendUrl } = useContext(AppContext);
-  const {mToken} = useContext(MentorContext);
+  const { mToken } = useContext(MentorContext);
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
+  const [coverImage, setCoverImage] = useState(false);
 
   const fetchBlog = async () => {
     try {
@@ -36,32 +31,29 @@ const BlogPage = () => {
     }
   };
 
-  const updateBlog = async() => {
-    if (!blog.title || !blog.body || !blog.coverImage) {
-      toast.error("All fields are required");
-      return;
-    }
+  const updateBlog = async () => {
     try {
-        const updateData = {
-            title : blog.title,
-            body : blog.body,
-            coverImage : blog.coverImage,
-        }
-        const {data} = await axios.patch(`${backendUrl}/api/mentor/update-blog/${id}`, updateData, {headers:{mToken}});
-        if(data.success) {
+        const formData = new FormData();
+        formData.append('title', blog.title);
+        formData.append('body', blog.body);
+        coverImage && formData.append('coverImage', coverImage);
+        
+        const { data } = await axios.patch(`${backendUrl}/api/mentor/update-blog/${id}`, formData, { headers: { mToken } });
+        if (data.success) {
             toast.success(data.message);
+            await fetchBlog();
             setIsEditing(false);
-            fetchBlog();
+            setCoverImage(false);
         } else {
             toast.error(data.message);
         }
-    } catch (error) {
+        } catch (error) {
         toast.error(error.message);
         console.log(error);
     }
-  }
+  };
 
-  const deleteBlog = async() => {
+  const deleteBlog = async () => {
     const result = await Swal.fire({
       title: '<span style="font-weight:600;">Delete this blog?</span>',
       html: "This action <strong>cannot be undone</strong>.",
@@ -79,26 +71,29 @@ const BlogPage = () => {
       },
     });
 
-    if(result.isConfirmed){
-        try {
-            const {data} = await axios.delete(`${backendUrl}/api/mentor/delete-blog/${id}`, {headers:{mToken}});
-            if (data.success) {
-              toast.success(data.message);
-              
-              navigate("/my-blogs");
-            } else {
-              toast.error(data.message);
-            }
-        } catch (error) {
-            toast.error(error.message);
-            console.log(error);
+    if (result.isConfirmed) {
+      try {
+        const { data } = await axios.delete(
+          `${backendUrl}/api/mentor/delete-blog/${id}`,
+          { headers: { mToken } }
+        );
+        if (data.success) {
+          toast.success(data.message);
+
+          navigate("/my-blogs");
+        } else {
+          toast.error(data.message);
         }
+      } catch (error) {
+        toast.error(error.message);
+        console.log(error);
+      }
     }
-  }
+  };
 
   useEffect(() => {
-    if(mToken){
-        fetchBlog();
+    if (mToken) {
+      fetchBlog();
     }
   }, [mToken]);
 
@@ -109,6 +104,28 @@ const BlogPage = () => {
       <Card className="p-6 shadow-lg">
         {isEditing ? (
           <>
+            <div className="flex justify-center">
+              <label htmlFor="image">
+                <div className="inline-block relative cursor-pointer">
+                  <img
+                    className="w-36 rounded opacity-75"
+                    src={coverImage ? URL.createObjectURL(coverImage) : blog.coverImage}
+                    alt=""
+                  />
+                  <img
+                    className="w-10 absolute bottom-12 right-12"
+                    src={coverImage ? null : assets.upload_icon}
+                    alt=""
+                  />
+                </div>
+                <input
+                  onChange={(e) => setCoverImage(e.target.files[0])}
+                  type="file"
+                  id="image"
+                  hidden
+                />
+              </label>
+            </div>
             <input
               type="text"
               value={blog.title}
@@ -119,13 +136,6 @@ const BlogPage = () => {
             <textarea
               value={blog.body}
               onChange={(e) => setBlog({ ...blog, body: e.target.value })}
-              className="mb-4"
-            />
-
-            <input
-              type="text"
-              value={blog.coverImage}
-              onChange={(e) => setBlog({ ...blog, coverImage: e.target.value })}
               className="mb-4"
             />
 
@@ -155,7 +165,7 @@ const BlogPage = () => {
               <Button color="blue" onClick={() => setIsEditing(true)}>
                 Edit
               </Button>
-              <Button color="red" onClick={deleteBlog} >
+              <Button color="red" onClick={deleteBlog}>
                 Delete
               </Button>
             </div>

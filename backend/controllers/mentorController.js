@@ -275,14 +275,26 @@ const updateBlog = async(req, res) => {
             return res.json({success: false, message:"Unauthorised"});
         }
 
-        const {title, body, coverImage} = req.body;
+        const {title, body} = req.body;
+        const imageFile = req.file;
 
-        if(!title || !body || !coverImage) return res.json({success:false, message:"All fields are required"})
-        blog.title = title;
-        blog.body = body;
-        blog.coverImage = coverImage;
+        if(!title || !body) return res.json({success:false, message:"Data Missing"});
+        
+        const updateData = {title, body};
 
-        await blog.save();
+        if(imageFile) {
+            const publicId = blog.coverImage
+                .split('/')
+                .slice(-1)[0]
+                .split('.')[0];
+            await cloudinary.uploader.destroy(publicId);
+            const imageUpload = await cloudinary.uploader.upload(imageFile.path, {
+            resource_type: "image",
+        });
+        updateData.coverImage = imageUpload.secure_url;
+        }
+
+        await blogModel.findByIdAndUpdate(req.params.id, updateData);
         return res.json({success: true, message: "Blog updated", blog});
 
     } catch (error) {
