@@ -185,6 +185,12 @@ useEffect(() => {
 
             <div className="mt-4">
               <p className="text-sm font-medium text-gray-800 flex items-center gap-1">
+                Current Company: {mentorInfo.currentCompany}
+              </p>
+            </div>
+
+            <div className="mt-4">
+              <p className="text-sm font-medium text-gray-800 flex items-center gap-1">
                 About
                 <img className="w-3" src={assets.info_icon} alt="info" />
               </p>

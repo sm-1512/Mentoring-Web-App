@@ -7,45 +7,46 @@ import {
   Typography,
   Avatar,
 } from "@material-tailwind/react";
-
+import { assets } from "../assets/assets.js";
 const testimonials = [
   {
     name: "Aarav Mehta",
-    avatar: "https://randomuser.me/api/portraits/men/75.jpg",
+    avatar: assets.testimonial1,
     role: "Third Year Student, BIT Mesra",
     feedback: "This platform helped me prepare with confidence and structure.",
   },
   {
     name: "Riya Sharma",
-    avatar: "https://randomuser.me/api/portraits/women/65.jpg",
+    avatar: assets.testimonial2,
     role: "Final Year Student, BIT Mesra",
     feedback: "Insights from seniors directly helped me crack my dream job.",
   },
   {
     name: "Ankit Raj",
-    avatar: "https://randomuser.me/api/portraits/men/41.jpg",
+    avatar: assets.testimonial3,
     role: "Pre-final Year Student, BIT Mesra",
     feedback: "Connecting with mentors gave me clarity and motivation.",
   },
   {
     name: "Sneha Patel",
-    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+    avatar: assets.testimonial4,
     role: "Third Year Student, BIT Mesra",
     feedback: "The mentorship and blogs were extremely valuable!",
   },
   {
     name: "Vikram Singh",
-    avatar: "https://randomuser.me/api/portraits/men/33.jpg",
+    avatar: assets.testimonial5,
     role: "Final Year Student, BIT Mesra",
     feedback: "Real-life experiences shared by mentors are a goldmine!",
   },
   {
     name: "Neha Verma",
-    avatar: "https://randomuser.me/api/portraits/women/58.jpg",
+    avatar: assets.testimonial6,
     role: "Second Year Student, BIT Mesra",
     feedback: "Even as a second-year, I feel much more prepared.",
   },
 ];
+
 
 const InfiniteTestimonialScroll = () => {
   const containerRef = useRef(null);

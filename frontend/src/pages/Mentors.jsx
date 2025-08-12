@@ -31,8 +31,7 @@ const Mentors = () => {
           <p className="text-sm font-medium text-gray-600">{item.degree}</p>
           <p className="text-sm font-medium text-gray-600">{item.college}</p>
           <p className="text-sm font-medium text-gray-600">{item.branch}</p>
-          <p className="text-sm font-medium text-gray-600">{item.company}</p>
-          <p className="text-sm font-medium text-gray-600">{item.about}</p>
+          <p className="text-sm font-medium text-gray-600">{item.currentCompany}</p>
         </div>
       ))}
     </div>

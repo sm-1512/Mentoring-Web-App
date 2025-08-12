@@ -4,11 +4,7 @@ import { assets } from "../assets/assets";
 const items = [
   {
     content: (
-      <img
-        src={assets.Atlassian}
-        alt="Atlassian"
-        className="h-16 object-contain"
-      />
+      <img src={assets.Atlassian} alt="Atlassian" className="h-16 object-contain" />
     ),
   },
   {
