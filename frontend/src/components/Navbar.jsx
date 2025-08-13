@@ -4,6 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 
+
 const Navbar = () => {
   const navigate = useNavigate();
   const {token, setToken, userData} = useContext(AppContext);
@@ -44,6 +45,12 @@ const Navbar = () => {
           <li className="py-1">CONTACT</li>
           <hr className="border-none outline-none h-0.5 bg-secondary w-3/5 m-auto hidden" />
         </NavLink>
+        <NavLink
+          to="http://localhost:5174/"
+          className="bg-transparent text-black px-6 py-2 rounded-full border border-black hover:bg-black hover:text-white transition duration-300 shadow-sm hover:shadow-md"
+        >
+          ADMIN PANEL
+        </NavLink>
       </ul>
 
       <div className="flex items-center gap-4 ">
@@ -54,8 +61,7 @@ const Navbar = () => {
             <div className="absolute top-0 right-0 pt-14 text-base font-medium text-black z-20 hidden group-hover:block">
               <div className="min-w-48 bg-white rounded flex flex-col gap-2 p-4">
                 <p
-                  onClick={() => (navigate("/my-profile"))}
-                  
+                  onClick={() => navigate("/my-profile")}
                   className="cursor-pointer hover:bg-black hover:text-white px-4 py-2 rounded"
                 >
                   My Profile
@@ -92,11 +98,10 @@ const Navbar = () => {
 
         {/*  Mobile Menu  */}
         <div
-  className={`md:hidden fixed right-0 top-0 bottom-0 z-20 overflow-hidden bg-white transition-all ${
-    showMenu ? "w-full" : "h-0 w-0"
-  }`}
->
-
+          className={`md:hidden fixed right-0 top-0 bottom-0 z-20 overflow-hidden bg-white transition-all ${
+            showMenu ? "w-full" : "h-0 w-0"
+          }`}
+        >
           <div className="flex items-center justify-between px-5 py-6">
             <img src={assets.logo} className="w-36" alt="" />
             <img
@@ -122,6 +127,12 @@ const Navbar = () => {
             </NavLink>
             <NavLink onClick={() => setShowMenu(false)} to="/contact">
               <p className="px-4 py-2 rounded full inline-block">CONTACT</p>
+            </NavLink>
+            <NavLink
+              onClick={() => setShowMenu(false)}
+              to="http://localhost:5174/"
+            >
+              <p className="px-4 py-2 rounded full inline-block">ADMIN PANEL</p>
             </NavLink>
           </ul>
         </div>

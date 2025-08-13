@@ -332,6 +332,33 @@ const getSingleBlog = async (req, res) => {
   }
 }
 
+const searchMentors = async (req, res) => {
+  try {
+    const q = (req.query.q || "").trim();
+    if (!q) return res.status(400).json({ message: "Search query is required" });
+
+    // regex for string fields
+    const regex = new RegExp(q, "i");
+    const orConditions = [
+      { name: regex },
+      { college: regex },
+      { branch: regex },
+      { currentCompany: regex },
+      { degree: regex },
+    ];
+
+    // only filter by graduationYear if q looks numeric
+    if (!isNaN(q)) {
+      searchConditions.push({ graduationYear: Number(q) });
+    }
+
+    const mentors = await mentorModel.find({ $or: orConditions }).select("-password");
+    res.json(mentors);
+  } catch (err) {
+    console.error("Search error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 export {
   registerUser,
@@ -345,4 +372,5 @@ export {
   verifyRazorpay,
   blogsList,
   getSingleBlog,
+  searchMentors,
 };
