@@ -9,10 +9,9 @@ export default function SearchBar({ setResults }) {
     if (!query.trim()) return;
 
     try {
-      const res = await axios.get(
-        `http://localhost:4000/api/user/search-mentors`,
-        { params: { q: query } }
-      );
+      const res = await axios.get(`https://mentos-backend.onrender.com`, {
+        params: { q: query },
+      });
       setResults(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error("Search error:", err);
