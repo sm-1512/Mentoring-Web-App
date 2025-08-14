@@ -1,6 +1,6 @@
 #  College Mentorship Platform
 
-A MERN stack-based **college mentorship platform** where students can connect with mentors from their college, book sessions for guidance, and learn from their valueable experiences.
+A MERN stack-based **college mentorship platform** where students can connect with mentors from their college, book sessions for guidance, and learn from their valuable experiences.
 
 ---
 
