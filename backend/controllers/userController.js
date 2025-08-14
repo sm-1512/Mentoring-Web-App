@@ -349,7 +349,7 @@ const searchMentors = async (req, res) => {
 
     // only filter by graduationYear if q looks numeric
     if (!isNaN(q)) {
-      searchConditions.push({ graduationYear: Number(q) });
+      orConditions.push({ graduationYear: Number(q) });
     }
 
     const mentors = await mentorModel.find({ $or: orConditions }).select("-password");

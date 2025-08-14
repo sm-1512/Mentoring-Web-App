@@ -1,21 +1,23 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
+import { AppContext } from "../context/AppContext";
 
 export default function SearchBar({ setResults }) {
   const [query, setQuery] = useState("");
+  const { backendUrl } = useContext(AppContext);
 
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!query.trim()) return;
 
     try {
-      const res = await axios.get(`https://mentos-backend.onrender.com`, {
+      const res = await axios.get(`${backendUrl}/api/user/search-mentors`, {
         params: { q: query },
       });
       setResults(Array.isArray(res.data) ? res.data : []);
     } catch (err) {
       console.error("Search error:", err);
-      setResults([]); // show "no results" instead of crashing
+      setResults([]);
     }
   };
 

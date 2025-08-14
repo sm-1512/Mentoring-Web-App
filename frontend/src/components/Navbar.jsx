@@ -46,7 +46,7 @@ const Navbar = () => {
           <hr className="border-none outline-none h-0.5 bg-secondary w-3/5 m-auto hidden" />
         </NavLink>
         <NavLink
-          to="http://localhost:5174/"
+          to="https://mentos-admin.onrender.com"
           className="bg-transparent text-black px-6 py-2 rounded-full border border-black hover:bg-black hover:text-white transition duration-300 shadow-sm hover:shadow-md"
         >
           ADMIN PANEL
@@ -130,7 +130,7 @@ const Navbar = () => {
             </NavLink>
             <NavLink
               onClick={() => setShowMenu(false)}
-              to="http://localhost:5174/"
+              to="https://mentos-admin.onrender.com"
             >
               <p className="px-4 py-2 rounded full inline-block">ADMIN PANEL</p>
             </NavLink>
