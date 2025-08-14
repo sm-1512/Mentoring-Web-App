@@ -12,7 +12,7 @@ const features = [
     description:
       "Become part of a growing network of students and mentors helping each other succeed.",
     linkText: "Get Started",
-    linkUrl: "/login",
+    linkUrl: "https://mentos-frontend.onrender.com/login",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +35,7 @@ const features = [
     description:
       "Get career guidance from mentors already placed at top companies and startups.",
     linkText: "Find Mentors",
-    linkUrl: "/mentors",
+    linkUrl: "https://mentos-frontend.onrender.com/mentors",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +58,7 @@ const features = [
     description:
       "Explore how this platform can boost your confidence and prepare you for placement.",
     linkText: "About Us",
-    linkUrl: "/about",
+    linkUrl: "https://mentos-frontend.onrender.com/about",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
