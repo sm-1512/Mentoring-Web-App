@@ -5,6 +5,7 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
+import { Link } from "react-router-dom";
 
 const features = [
   {
@@ -12,7 +13,7 @@ const features = [
     description:
       "Become part of a growing network of students and mentors helping each other succeed.",
     linkText: "Get Started",
-    linkUrl: "https://mentos-frontend.onrender.com/login",
+    linkUrl: "/login",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -35,7 +36,7 @@ const features = [
     description:
       "Get career guidance from mentors already placed at top companies and startups.",
     linkText: "Find Mentors",
-    linkUrl: "https://mentos-frontend.onrender.com/mentors",
+    linkUrl: "/mentors",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +59,7 @@ const features = [
     description:
       "Explore how this platform can boost your confidence and prepare you for placement.",
     linkText: "About Us",
-    linkUrl: "https://mentos-frontend.onrender.com/about",
+    linkUrl: "/about",
     icon: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -99,7 +100,7 @@ const WhatWeDo = () => {
                 <Typography>{description}</Typography>
               </CardBody>
               <CardFooter className="pt-0">
-                <a href={linkUrl} className="inline-block">
+                <Link to={linkUrl} className="inline-block">
                   <Button
                     size="sm"
                     variant="text"
@@ -121,7 +122,7 @@ const WhatWeDo = () => {
                       />
                     </svg>
                   </Button>
-                </a>
+                </Link>
               </CardFooter>
             </Card>
           )
