@@ -45,7 +45,17 @@ Our platform aims to solve this by:
 - JWT Authentication
 
 ---
+**Screenshots**:
 
+<img width="1919" height="908" alt="Image" src="https://github.com/user-attachments/assets/3d1c4990-1d5a-4d23-980d-44bcb5b2c3f3" />
+<img width="1918" height="907" alt="Image" src="https://github.com/user-attachments/assets/b79335ff-9bab-474e-99c7-2d7aee0d6b4b" />
+<img width="1919" height="907" alt="Image" src="https://github.com/user-attachments/assets/63648742-8982-4950-b824-4066a63cb9a8" />
+<img width="1917" height="868" alt="Image" src="https://github.com/user-attachments/assets/83341401-c059-4cbd-8637-4461c662a815" />
+<img width="1916" height="905" alt="Image" src="https://github.com/user-attachments/assets/731520b9-9f88-4f0e-b968-ba28779ba8eb" />
+<img width="1917" height="907" alt="Image" src="https://github.com/user-attachments/assets/b2e5e470-4e7f-4294-a62e-7e29f11b7113" />
+<img width="1917" height="905" alt="Image" src="https://github.com/user-attachments/assets/fb6a7431-ba28-4040-833d-15801586c81d" />
+<img width="1916" height="904" alt="Image" src="https://github.com/user-attachments/assets/a05dbd96-0581-4d14-9f61-5674b06d7ec9" />
+<img width="1916" height="906" alt="Image" src="https://github.com/user-attachments/assets/869e0880-0352-4d0b-8f38-9bbf48297b05" />
 
 ---
 
