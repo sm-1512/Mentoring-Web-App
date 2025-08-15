@@ -139,7 +139,7 @@ const MyProfile = () => {
                 onChange={(e) =>
                   setUserData((prev) => ({ ...prev, branch: e.target.value }))
                 }
-                value={userData.dob}
+                value={userData.branch}
               />
             ) : (
               <span>{userData.branch}</span>
