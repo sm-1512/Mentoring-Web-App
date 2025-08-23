@@ -49,9 +49,10 @@ const Navbar = () => {
         </NavLink>
       </ul>
 
-      <div className="flex items-center gap-4">
+      {/* Right controls */}
+      <div className="flex items-center gap-2 sm:gap-4">
         {token && userData ? (
-          <div className="flex items-center gap-4 cursor-pointer group relative">
+          <div className="flex items-center gap-3 cursor-pointer group relative">
             <img className="w-8 rounded-full" src={userData.image} alt="" />
             <img className="w-2.5" src={assets.dropdown_icon} alt="" />
             <div className="absolute top-0 right-0 pt-14 text-base font-medium text-black z-20 hidden group-hover:block">
@@ -78,19 +79,19 @@ const Navbar = () => {
             </div>
           </div>
         ) : (
-          <div>
-            <button
-              onClick={() => navigate("/login")}
-              className="bg-black text-white px-8 py-3 rounded-full font-light"
-            >
-              Create account
-            </button>
-          </div>
+          // Slim, no-wrap, and hidden on ultra-narrow screens (still in drawer)
+          <button
+            onClick={() => navigate("/login")}
+            className="bg-black text-white px-4 py-2 rounded-full font-light text-sm whitespace-nowrap shrink-0 md:px-8 md:py-3 md:text-base max-[360px]:hidden"
+          >
+            Create account
+          </button>
         )}
 
+        {/* Hamburger (mobile) */}
         <img
           onClick={() => setShowMenu(true)}
-          className="w-6 md:hidden"
+          className="w-6 md:hidden ml-1"
           src={assets.menu_icon}
           alt=""
         />
@@ -118,7 +119,7 @@ const Navbar = () => {
               <p className="px-4 py-2 rounded full inline-block">BLOGS</p>
             </NavLink>
             <NavLink to="/mentors" onClick={() => setShowMenu(false)}>
-              <p className="px-4 py-2 rounded full inline-block">MENTORS</p>
+              <li className="py-1">MENTORS</li>
             </NavLink>
             <NavLink onClick={() => setShowMenu(false)} to="/about">
               <p className="px-4 py-2 rounded full inline-block">ABOUT</p>
@@ -133,7 +134,18 @@ const Navbar = () => {
               <p className="px-4 py-2 rounded full inline-block">ADMIN PANEL</p>
             </NavLink>
 
-            
+            {/* Always available in drawer */}
+            {!token && (
+              <button
+                onClick={() => {
+                  setShowMenu(false);
+                  navigate("/login");
+                }}
+                className="mt-3 bg-black text-white px-8 py-3 rounded-full font-light"
+              >
+                Create account
+              </button>
+            )}
           </ul>
         </div>
       </div>
