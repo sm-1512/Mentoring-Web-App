@@ -5,6 +5,8 @@ import {
   Typography,
   Button,
 } from "@material-tailwind/react";
+import { useNavigate } from "react-router-dom";
+
 
 const features = [
   {
@@ -79,6 +81,8 @@ const features = [
 ];
 
 const WhatWeDo = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="py-16 px-4 bg-gray-50">
       <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
@@ -99,11 +103,12 @@ const WhatWeDo = () => {
                 <Typography>{description}</Typography>
               </CardBody>
               <CardFooter className="pt-0">
-                <a href={linkUrl} className="inline-block">
+                
                   <Button
                     size="sm"
                     variant="text"
                     className="flex items-center gap-2"
+                    onClick={() => navigate(linkUrl)}
                   >
                     {linkText}
                     <svg
@@ -121,7 +126,7 @@ const WhatWeDo = () => {
                       />
                     </svg>
                   </Button>
-                </a>
+                
               </CardFooter>
             </Card>
           )
