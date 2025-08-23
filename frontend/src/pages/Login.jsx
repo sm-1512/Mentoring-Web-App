@@ -34,7 +34,7 @@ const Login = () => {
         });
 
         if (data.success) {
-          localStorage.getItem("token", data.token);
+          localStorage.setItem("token", data.token);
           setToken(data.token);
         } else {
           toast.error(data.message);

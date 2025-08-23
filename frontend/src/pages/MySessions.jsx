@@ -30,6 +30,7 @@ const MySessions = () => {
       dateArray[0] + " " + months[Number(dateArray[1]) - 1] + " " + dateArray[2]
     );
   };
+  
   const getUserSessions = async () => {
     try {
       const { data } = await axios.get(backendUrl + "/api/user/sessions", {
