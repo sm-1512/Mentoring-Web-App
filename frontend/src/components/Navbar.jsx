@@ -47,6 +47,8 @@ const Navbar = () => {
         </NavLink>
         <NavLink
           to="https://mentos-admin.onrender.com"
+          target="_blank"
+          rel="noopener noreferrer" //Done to prevent tabnabbing. It is a security and privacy best practice.
           className="bg-transparent text-black px-6 py-2 rounded-full border border-black hover:bg-black hover:text-white transition duration-300 shadow-sm hover:shadow-md"
         >
           ADMIN PANEL

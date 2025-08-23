@@ -50,9 +50,14 @@ const Contact = () => {
             network.
           </p>
 
-          <button className="border border-black px-8 py-3 text-sm rounded-full hover:bg-black hover:text-white transition-all duration-300">
+          <a
+            href="https://mentos-admin.onrender.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block border border-black px-8 py-3 text-sm rounded-full hover:bg-black hover:text-white transition-all duration-300"
+          >
             Join as a Mentor
-          </button>
+          </a>
         </div>
 
         {/* Right: Image */}
